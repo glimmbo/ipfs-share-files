@@ -87,7 +87,7 @@ export const NodePinProvider: React.FC<{ children: React.ReactNode }> = ({ child
       headers: buildHeaders(apiKey)
     })
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+      throw new Error(`Failed to pin CID ${cid}: HTTP ${res.status} - ${res.statusText}`)
     }
   }, [apiUrl, apiKey])
 

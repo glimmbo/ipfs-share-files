@@ -90,12 +90,12 @@ export const NodePinSettings = (): React.JSX.Element | null => {
             </button>
           </div>
 
-          {connectionStatus === 'connected' && remotePeerId != null && (
+          {connectionStatus === 'connected' && remotePeerId !== null && (
             <p className='mt2 mb0 f7 green lh-copy'>
               ✅ {t('nodePinSettings.connected', { peerId: remotePeerId })}
             </p>
           )}
-          {connectionStatus === 'error' && connectionError != null && (
+          {connectionStatus === 'error' && connectionError !== null && (
             <p className='mt2 mb0 f7 red lh-copy'>
               🔴 {connectionError}
             </p>
