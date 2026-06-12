@@ -8,6 +8,8 @@ import { useHelia } from '../../hooks/use-helia.js'
 import { AddFiles } from '../add-files/add-files.jsx'
 import { DownloadFiles } from '../download-files/download-files.jsx'
 import { FileTree } from '../file-tree/file-tree.jsx'
+import { NodePinSettings } from '../node-pin-settings/node-pin-settings.jsx'
+import { PinStatus } from '../node-pin-settings/pin-status.jsx'
 import { ShareAllFiles } from '../share-all-files/share-all-files.jsx'
 
 export const Box = forwardRef<HTMLDivElement, { children: any, className?: string }>((props, ref) => {
@@ -61,6 +63,8 @@ export const BoxAdd = (): React.JSX.Element => {
     <AddFiles doAddFiles={doAddFiles} />
     <FileTree />
     <ShareAllFiles />
+    <PinStatus />
+    <NodePinSettings />
   </Box>
 }
 

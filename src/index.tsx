@@ -7,6 +7,7 @@ import { App } from './app.jsx'
 import i18n from './i18n'
 import { FilesProvider } from './providers/files-provider.jsx'
 import { HeliaProvider } from './providers/helia-provider.jsx'
+import { NodePinProvider } from './providers/node-pin-provider.jsx'
 import registerServiceWorker from './register-service-worker.js'
 
 const rootEl = document.getElementById('root')
@@ -19,9 +20,11 @@ root.render(
   <DndProvider backend={HTML5Backend}>
     <I18nextProvider i18n={i18n} >
       <HeliaProvider>
-        <FilesProvider>
-            <App />
-        </FilesProvider>
+        <NodePinProvider>
+          <FilesProvider>
+              <App />
+          </FilesProvider>
+        </NodePinProvider>
       </HeliaProvider>
     </I18nextProvider>
   </DndProvider>
