@@ -93,5 +93,23 @@
     "connections": "Connections",
     "connectionsValue": "{total} ({inbound} in, {outbound} out, {unlimited} unlimited/direct)",
     "provideToDHT": "Announce CIDs on Amino DHT"
+  },
+  "nodePinSettings": {
+    "toggleLabel": "Pin to IPFS node",
+    "title": "Pin to your IPFS node",
+    "description": "Configure your self-hosted IPFS node (Kubo) so files remain available even after you close this tab.",
+    "apiUrlLabel": "Node API URL",
+    "apiKeyLabel": "API key / bearer token (optional)",
+    "apiKeyPlaceholder": "Leave blank if not required",
+    "testBtn": "Test connection",
+    "testing": "Testing…",
+    "saveBtn": "Save",
+    "connected": "Connected — peer ID: {peerId}",
+    "corsNote": "Your IPFS node must have CORS configured to allow requests from this origin. <1>See Kubo docs</1>.",
+    "pinStatus": {
+      "pinning": "Pinning to your IPFS node…",
+      "pinned": "Pinned on your IPFS node",
+      "error": "Pin failed: {error}"
+    }
   }
 }

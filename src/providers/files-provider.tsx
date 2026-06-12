@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useReducer } from 'react'
 import { asyncItToFile } from '../components/file/utils/async-it-to-file.js'
 import { getShareLink } from '../components/file/utils/get-share-link.js'
 import { useHelia } from '../hooks/use-helia.js'
+import { useNodePin } from '../hooks/use-node-pin.js'
 import { getWebRTCAddrs } from '../lib/share-addresses.js'
 import type { Multiaddr } from '@multiformats/multiaddr'
 
@@ -103,6 +104,8 @@ export interface FilesToPublish {
   publishing: boolean
 }
 
+export type RemotePinStatus = 'idle' | 'pinning' | 'pinned' | 'error'
+
 export interface FilesState {
   filesToFetch: FileToFetch[]
   filesToPublish: FilesToPublish[]
@@ -115,6 +118,10 @@ export interface FilesState {
 
   // Whether or not to provide CIDs to the DHT
   provideToDHT: boolean
+
+  // Status of pinning the root CID to the user's configured remote IPFS node
+  remotePinStatus: RemotePinStatus
+  remotePinError: string | undefined
 }
 
 export type FilesAction =
@@ -145,6 +152,10 @@ export type FilesAction =
   | { type: 'reset_files' }
 
   | { type: 'set_provide_to_dht', provideToDHT: boolean }
+
+  | { type: 'remote_pin_start' }
+  | { type: 'remote_pin_success' }
+  | { type: 'remote_pin_fail', error: Error }
 
 // eslint-disable-next-line complexity
 function filesReducer (state: FilesState, action: FilesAction): FilesState {
@@ -387,6 +398,26 @@ function filesReducer (state: FilesState, action: FilesAction): FilesState {
         provideToDHT: action.provideToDHT
       }
 
+    case 'remote_pin_start':
+      return {
+        ...state,
+        remotePinStatus: 'pinning',
+        remotePinError: undefined
+      }
+
+    case 'remote_pin_success':
+      return {
+        ...state,
+        remotePinStatus: 'pinned'
+      }
+
+    case 'remote_pin_fail':
+      return {
+        ...state,
+        remotePinStatus: 'error',
+        remotePinError: action.error.message
+      }
+
     default:
       return state
   }
@@ -398,7 +429,9 @@ const initialState: FilesState = {
   files: {},
   rootPublished: false,
   shareLink: { link: null, cid: null },
-  provideToDHT: false
+  provideToDHT: false,
+  remotePinStatus: 'idle',
+  remotePinError: undefined
 }
 
 export const FilesContext = createContext<FilesState>(initialState)
@@ -409,6 +442,7 @@ export const FilesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // const [fetching, setFetching] = React.useState(false)
   const { helia, mfs, unixfs, nodeInfo } = useHelia()
   const { filesToFetch, filesToPublish, files, provideToDHT } = state
+  const { pinCid, apiUrl } = useNodePin()
 
   /**
    * File Fetching Effect
@@ -603,6 +637,17 @@ export const FilesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // TODO: dispatch a new action to update the state to indicate if the file won't be provided to the DHT?
 
       dispatch({ type: 'publish_success_dir' })
+
+      // Pin to user's remote IPFS node if configured
+      if (apiUrl !== '') {
+        dispatch({ type: 'remote_pin_start' })
+        try {
+          await pinCid(rootStats.cid.toString())
+          dispatch({ type: 'remote_pin_success' })
+        } catch (e: any) {
+          dispatch({ type: 'remote_pin_fail', error: e instanceof Error ? e : new Error(String(e)) })
+        }
+      }
     }
     publishRoot().catch((err: any) => {
       if (err.name === 'AbortError') {
@@ -615,7 +660,7 @@ export const FilesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => {
       controller.abort()
     }
-  }, [filesToPublish.map(f => f.cid.toString()).sort().join(','), filesToFetch.map(f => f.cid.toString()).sort().join(','), mfs, getWebRTCAddrs(nodeInfo?.multiaddrs).map(a => a.toString()).join(',')])
+  }, [filesToPublish.map(f => f.cid.toString()).sort().join(','), filesToFetch.map(f => f.cid.toString()).sort().join(','), mfs, getWebRTCAddrs(nodeInfo?.multiaddrs).map(a => a.toString()).join(','), pinCid, apiUrl])
 
   return (
     <FilesContext.Provider value={state}>
