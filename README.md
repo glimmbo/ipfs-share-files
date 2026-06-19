@@ -37,6 +37,7 @@ Maintainers welcome! This repo is not currently under active development, but is
 - Supports browser-specified language or manual choice of language via menu
 - 100% mobile-friendly
 - Supports installation as a mobile shortcut or desktop standalone app
+- Includes a connected-users page with live map, pubsub room presence, waypoint controls, and group audio signaling
 - Includes brief explainers on how IPFS Share works, with links to more details for the curious
 
 ### How it works
@@ -86,7 +87,7 @@ To build IPFS Share for production to the `build` folder:
 
 ### Deployment
 
-Changes merged to `main` are automatically deployed to [share.ipfs.io](https://share.ipfs.io).
+Changes merged to `main` are built with relative asset paths and deployed to IPFS through the GitHub Actions build/deploy pipeline. The same static build is also published to GitHub Pages on `main`.
 
 ## Translations
 

@@ -4,6 +4,7 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   // build: {
   //   rollupOptions: {
   //     external: /.*(cross-spawn|storybook|stories).*/,

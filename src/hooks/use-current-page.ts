@@ -15,10 +15,13 @@ const filenameRegex = /(?<=filename=)[^&]+/
 
 const maddrsRegex = /(?<=maddrs=)[^&]+/
 
-export type CurrentPage = 'add' | 'download'
+export type CurrentPage = 'add' | 'download' | 'control'
 export const useCurrentPage = (): CurrentPage => {
   const [location] = useHashLocation()
   const dispatch = useFilesDispatch()
+  if (location.startsWith('/control')) {
+    return 'control'
+  }
   const maybeCid = location.match(cidRegex)?.[0] ?? null
   const filename = location.match(filenameRegex)?.[0] ?? null
   const maddrs = location.match(maddrsRegex)?.[0] ?? null

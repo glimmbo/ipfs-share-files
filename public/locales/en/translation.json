@@ -2,9 +2,14 @@
   "pageTitle": {
     "ipfs": "IPFS Share",
     "add": "Share Files",
-    "download": "Download Files"
+    "download": "Download Files",
+    "control": "Connected Map"
   },
   "header": "Share",
+  "nav": {
+    "add": "Share files",
+    "control": "Live map"
+  },
   "footer": "Licensed <1>CC-BY 3.0</1> except as <3>noted</3>",
   "powered-by-helia": "Powered by <1>Helia</1>",
   "info": {
