@@ -3,6 +3,7 @@
 import { mfs as _mfs, type MFS } from '@helia/mfs'
 import { unixfs as _unixfs, type UnixFS } from '@helia/unixfs'
 import { inspectorMetrics } from '@ipshipyard/libp2p-inspector-metrics'
+import { gossipsub } from '@libp2p/gossipsub'
 import { type Connection } from '@libp2p/interface'
 import { IDBBlockstore } from 'blockstore-idb'
 import { IDBDatastore } from 'datastore-idb'
@@ -88,6 +89,9 @@ export const HeliaProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             datastore,
             blockstore,
             libp2p: {
+              services: {
+                pubsub: gossipsub()
+              },
               metrics: inspectorMetrics()
             }
           }) as HeliaLibp2p
